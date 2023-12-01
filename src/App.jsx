@@ -1,10 +1,38 @@
+import { useEffect } from "react";
 import { useState } from "react";
 function App() {
   const [showBazarFrom, setShowBazarFrom] = useState(false);
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [list, setList] = useState("");
+  const [amount, setAmount] = useState(0);
+
+  const [bazarLists, setBazarLists] = useState({
+    id: "",
+    name: "",
+    date: "",
+    list: "",
+    amount: "",
+  });
 
   const toggleBazarForm = () => {
     setShowBazarFrom(!showBazarFrom);
   };
+  const handleAddList = () => {
+    const bazarList = {
+      id: Date.now(),
+      name,
+      date,
+      list,
+      amount,
+    };
+    setBazarLists(bazarList);
+    console.log(bazarLists);
+  };
+
+  useEffect(() => {
+    handleAddList();
+  }, [name, date, list, amount]);
   return (
     <main className="w-sm px-4 border  mx-auto min-h-screen">
       <div className="wrapper">
@@ -36,7 +64,12 @@ function App() {
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white rounded p-8 max-w-md relative">
               <h2 className="text-2xl mb-4">Add Bazar</h2>
-              <form>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleAddList();
+                }}
+              >
                 {/* Add your form fields here */}
                 <div className="mb-4">
                   <label
@@ -49,6 +82,8 @@ function App() {
                   <select
                     id="name"
                     name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   >
                     <option value="" disabled selected>
@@ -71,6 +106,8 @@ function App() {
                     type="date"
                     id="date"
                     name="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                     className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="420 taka"
                   />
@@ -84,7 +121,9 @@ function App() {
                     Bazar List
                   </label>
                   <textarea
-                    type="date"
+                    type="text"
+                    onChange={(e) => setList(e.target.value)}
+                    value={list}
                     id="list"
                     name="list"
                     className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -99,6 +138,8 @@ function App() {
                     Total Amount
                   </label>
                   <input
+                    onChange={(e) => setAmount(Number(e.target.value))}
+                    value={amount}
                     type="text"
                     id="amount"
                     name="amount"
